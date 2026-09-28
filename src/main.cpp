@@ -87,7 +87,7 @@ struct mocha {
         return std::filesystem::path{buffer.data()};
     }
 
-}; // struct rpxloader_init
+}; // struct mocha
 
 
 const std::filesystem::path env_root = "fs:/vol/external01/wiiu/environments";
@@ -105,6 +105,7 @@ std::filesystem::path cur_env;
 std::filesystem::path default_env;
 
 bool from_hbl = false;
+bool small_screen = false;
 
 
 void
@@ -296,6 +297,8 @@ try {
 
         ButtonHBox buttons;
         buttons.spread = true;
+        if (small_screen)
+            buttons.uniform = false;
 
         buttons.add(
             "Quit",
@@ -347,7 +350,10 @@ try {
                                    static_cast<std::size_t>(idx));
         }
 
-        buttons.show();
+        // Allow buttons to scroll independently from content.
+        if (Child buttons_area{"buttons_area"})
+            buttons.show();
+
     }
 }
 catch (std::exception& e) {
@@ -384,6 +390,9 @@ initialize_imgui()
 
     ImGui_ImplWiiU_Init();
     ImGui_ImplGX2_Init();
+
+    GX2ColorBuffer* cb = WHBGfxGetTVColourBuffer();
+    small_screen = cb->surface.height < 720; // if TV is set below 720p
 }
 
 
@@ -434,8 +443,6 @@ finalize()
     WHBProcShutdown();
 
     KPADShutdown();
-
-    cout << "Finalizing " << PACKAGE_STRING << endl;
 }
 
 
