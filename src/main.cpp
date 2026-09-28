@@ -12,12 +12,11 @@
 #include <format>
 #include <fstream>
 #include <iostream>
-#include <optional>
 #include <ranges>
 #include <stdexcept>
 #include <vector>
 
-#include <strings.h>
+#include <strings.h> // strcasecmp()
 
 #include <coreinit/launch.h>
 #include <coreinit/memory.h>
