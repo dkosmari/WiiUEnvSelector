@@ -1,0 +1,5 @@
+LIBMOCHA_FILES ?= \
+	$(addprefix libmocha/,$(shell git -C $(srcdir)/libmocha ls-files))
+
+EXTRA_DIST += $(LIBMOCHA_FILES)
+

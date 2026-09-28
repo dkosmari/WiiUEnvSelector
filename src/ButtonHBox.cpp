@@ -1,0 +1,138 @@
+/*
+ *  Wii U Env Selector
+ *  Copyright (C) 2026  Daniel K. O.
+ *
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
+#include <cmath>
+#include <ranges>
+#include <utility>
+
+#include <imgui_stdlib.h>
+
+#include "ButtonHBox.hpp"
+
+namespace {
+
+    ImVec2
+    max(const ImVec2& a,
+        const ImVec2& b)
+    {
+        return {
+            std::fmax(a.x, b.x),
+            std::fmax(a.y, b.y)
+        };
+    }
+
+} // namespace
+
+
+void
+ButtonHBox::add(Button&& button)
+{
+    buttons.push_back(std::move(button));
+    update();
+}
+
+void
+ButtonHBox::add(const std::string& label,
+                const std::string& tooltip,
+                bool is_default,
+                ClickFunction on_click)
+{
+    buttons.emplace_back(label, tooltip, is_default, std::move(on_click));
+    update();
+}
+
+void
+ButtonHBox::add(const std::string& label,
+                bool is_default,
+                ClickFunction on_click)
+{
+    add(label, {}, is_default, std::move(on_click));
+}
+
+void
+ButtonHBox::add(const std::string& label,
+                ClickFunction on_click)
+{
+    add(label, {}, false, std::move(on_click));
+}
+
+void
+ButtonHBox::show()
+{
+    if (buttons.empty())
+        return;
+
+    const auto available = ImGui::GetContentRegionAvail();
+
+    // Special handling: for single button, spread is ignored.
+    if (spread && buttons.size() == 1) {
+        spread = false;
+        update();
+    }
+
+    if (halign >= 0) {
+        const float empty_hspace = available.x - total_width;
+        if (empty_hspace > 0)
+            ImGui::SetCursorPosX(ImGui::GetCursorPosX() + empty_hspace * halign);
+    }
+
+    if (valign >= 0) {
+        const float empty_vspace = available.y - button_size.y;
+        if (empty_vspace > 0)
+            ImGui::SetCursorPosY(ImGui::GetCursorPosY() + empty_vspace * valign);
+    }
+
+    float spacing = -1;
+    if (spread) {
+        const auto n = buttons.size();
+        spacing = (total_width - buttons_width) / (n - 1);
+    }
+
+    for (auto [idx, b] : buttons | std::views::enumerate) {
+        if (idx > 0) {
+            ImGui::SameLine(0, spacing);
+        }
+
+        if (ImGui::Button(b.label, button_size))
+            if (b.on_click)
+                b.on_click();
+        if (!b.tooltip.empty())
+            ImGui::SetItemTooltip(b.tooltip);
+        if (b.is_default)
+            ImGui::SetItemDefaultFocus();
+    }
+}
+
+
+float
+ButtonHBox::get_height_with_spacing()
+    const
+{
+    const auto& style = ImGui::GetStyle();
+    return style.ItemSpacing.y + button_size.y;
+}
+
+
+void
+ButtonHBox::update()
+{
+    if (buttons.empty())
+        return;
+
+    const auto& style = ImGui::GetStyle();
+
+    auto size = ImGui::CalcTextSize(buttons.back().label) + 2 * style.FramePadding;
+    button_size = max(button_size, size);
+
+    const auto n = buttons.size();
+    buttons_width = n * button_size.x;
+
+    if (spread)
+        total_width = ImGui::GetContentRegionAvail().x;
+    else
+        total_width = buttons_width + (n - 1) * style.ItemSpacing.x;
+}

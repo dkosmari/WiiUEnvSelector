@@ -1,0 +1,9 @@
+[submodule "external/imgui"]
+	path = external/imgui
+	url = https://github.com/dkosmari/imgui.git
+[submodule "external/wiiu-stdout"]
+	path = external/wiiu-stdout
+	url = https://github.com/dkosmari/wiiu-stdout.git
+[submodule "external/libmocha"]
+	path = external/libmocha
+	url = https://github.com/wiiu-env/libmocha.git

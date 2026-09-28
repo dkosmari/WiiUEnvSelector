@@ -1,0 +1,71 @@
+/*
+ *  Wii U Env Selector
+ *  Copyright (C) 2026  Daniel K. O.
+ *
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
+#ifndef BUTTON_H_BOX_HPP
+#define BUTTON_H_BOX_HPP
+
+#include <functional>
+#include <string>
+#include <vector>
+
+#include <imgui.h>
+
+
+struct ButtonHBox {
+
+    using ClickCallbackSignature = void();
+    using ClickFunction = std::move_only_function<ClickCallbackSignature>;
+
+    struct Button {
+        std::string label = {};
+        std::string tooltip = {};
+        bool is_default = false;
+        ClickFunction on_click = {};
+    };
+
+    float halign = 0.5f;
+    float valign = -1;
+    bool spread = false;
+    std::vector<Button> buttons = {};
+
+    ImVec2 button_size   = {};  // recalculated after each add()
+    float  buttons_width = 0;   // recalculated after each add()
+    float  total_width   = 0;   // recalculated after each add()
+
+    void
+    add(Button&& b);
+
+    void
+    add(const std::string& label,
+        const std::string& tooltip,
+        bool is_default,
+        ClickFunction on_click);
+
+    void
+    add(const std::string& label,
+        bool is_default,
+        ClickFunction on_click);
+
+    void
+    add(const std::string& label,
+        ClickFunction on_click);
+
+    void
+    show();
+
+    float
+    get_height_with_spacing()
+        const;
+
+private:
+
+    void
+    update();
+
+}; // struct ButtonHBox
+
+#endif
