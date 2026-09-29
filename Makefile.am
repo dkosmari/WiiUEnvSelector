@@ -81,7 +81,7 @@ BUILD_TIMESTAMP := $(shell \
 if [ -n "$$SOURCE_DATE_EPOCH" ]; then \
     date -u -d "@$$SOURCE_DATE_EPOCH" +'%Y%m%d%H%M%S' 2>/dev/null || date -u -r "$$SOURCE_DATE_EPOCH" +'%Y%m%d%H%M%S'; \
 else \
-    date +'%Y%m%d%H%M%S'; \
+    date -u +'%Y%m%d%H%M%S'; \
 fi \
 )
 
