@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<app version="1">
+  <name>@PACKAGE_NAME@</name>
+  <coder>Daniel K. O.</coder>
+  <version>@PACKAGE_VERSION@</version>
+  <release_date>@BUILD_TIMESTAMP@</release_date>
+  <short_description>Set what environment to boot.</short_description>
+  <long_description>Select what environment to load (with Environment Loader) during autoboot.
+
+Source: @PACKAGE_URL@</long_description>
+</app>

@@ -2,7 +2,11 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.71])
-AC_INIT([Wii U Env Selector], [0.0], [])
+AC_INIT([Wii U Env Selector],
+        [1.0],
+        [https://github.com/dkosmari/WiiUEnvSelector/issues],
+        [],
+        [https://github.com/dkosmari/WiiUEnvSelector])
 AC_CONFIG_SRCDIR([src/main.cpp])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
@@ -33,6 +37,8 @@ PKG_CHECK_MODULES([FT], [freetype2])
 
 WIIU_ENV_SETUP_LIBMOCHA([external/libmocha])
 
+
 AC_CONFIG_FILES([Makefile
-                 external/Makefile])
+                 external/Makefile
+                 meta.xml.tmp:assets/hbl/meta.xml.in])
 AC_OUTPUT

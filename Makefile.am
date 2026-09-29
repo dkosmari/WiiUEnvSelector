@@ -1,4 +1,5 @@
 EXTRA_DIST = \
+	assets \
 	bootstrap \
 	COPYING.GPLv3 \
 	README.md
@@ -11,6 +12,9 @@ external/%:
 
 AM_CXXFLAGS = -Wall -Wextra -Werror
 AM_CFLAGS = -Wall -Wextra
+
+
+APP_NAME := WiiUEnvSelector
 
 
 noinst_PROGRAMS = WiiUEnvSelector.elf
@@ -43,27 +47,73 @@ WiiUEnvSelector_elf_LDADD = \
 	$(LDADD)
 
 
-WiiUEnvSelector_elf_DEPENDENCIES = $(LIBMOCHA_LIB)
+WiiUEnvSelector_elf_DEPENDENCIES = \
+	$(LIBMOCHA_LIB) \
+	external/libimgui.la
 
 
 WiiUEnvSelector_elf_LDFLAGS = \
 	$(AM_LDFLAGS) \
-	-Wl,-Map,WiiUEnvSelector.map
+	-Wl,-Map,$(APP_NAME).map
 
 
-RPX_FILE = WiiUEnvSelector.rpx
+RPX_FILE = $(APP_NAME).rpx
 
-WUHB_FILE = WiiUEnvSelector.wuhb
+WUHB_FILE = $(APP_NAME).wuhb
 
-$(WUHB_FILE): $(RPX_FILE) Makefile
+
+$(WUHB_FILE): 	$(RPX_FILE) \
+		Makefile \
+		assets/icon.png \
+		assets/splash-tv.png \
+		assets/splash-drc.png
 	$(WUHBTOOL) \
 		$< $@ \
 		--name="$(PACKAGE_STRING)" \
 		--short-name="$(PACKAGE_TARNAME)" \
-		--author="Daniel K. O."
+		--author="Daniel K. O." \
+		--icon=assets/icon.png \
+		--tv-image=assets/splash-tv.png \
+		--drc-image=assets/splash-drc.png
 
 
-all-local: $(WUHB_FILE)
+BUILD_TIMESTAMP := $(shell \
+if [ -n "$$SOURCE_DATE_EPOCH" ]; then \
+    date -u -d "@$$SOURCE_DATE_EPOCH" +'%Y%m%d%H%M%S' 2>/dev/null || date -u -r "$$SOURCE_DATE_EPOCH" +'%Y%m%d%H%M%S'; \
+else \
+    date +'%Y%m%d%H%M%S'; \
+fi \
+)
+
+$(info BUILD_TIMESTAMP=$(BUILD_TIMESTAMP))
+
+
+HBL_ICON_FILE := assets/hbl/icon.png
+
+HBL_META_XML_FILE := meta.xml
+
+$(HBL_META_XML_FILE): $(HBL_META_XML_FILE).tmp $(RPX_FILE)
+	sed 's/@BUILD_TIMESTAMP@/$(BUILD_TIMESTAMP)/g' $< > $@
+
+
+APP_ZIP_FILE := $(APP_NAME).zip
+
+
+STAGING_DIR := wiiu/apps/$(APP_NAME)
+
+$(APP_ZIP_FILE):	$(WUHB_FILE) \
+			$(RPX_FILE) \
+			$(HBL_ICON_FILE) \
+			$(HBL_META_XML_FILE)
+	$(RM) -r wiiu
+	$(RM) $@
+	$(MKDIR_P) $(STAGING_DIR)
+	cp --target-directory=$(STAGING_DIR) $^
+	zip -r $@ wiiu
+	$(RM) -r wiiu
+
+
+all-local: $(WUHB_FILE) $(APP_ZIP_FILE)
 
 
 .PHONY: run run-rpx
@@ -85,8 +135,14 @@ wiiu-uninstall:
 	curl "ftp://wiiu" --quote "DELE /fs/vol/external01/wiiu/apps/$(WUHB_FILE)"
 
 
+BUILT_SOURCES = $(HBL_META_XML_FILE)
+
+
 CLEANFILES = \
+	$(HBL_META_XML_FILE) \
+	$(HBL_META_XML_FILE).tmp \
 	$(WUHB_FILE) \
+	$(APP_ZIP_FILE) \
 	WiiUEnvSelector.map
 
 

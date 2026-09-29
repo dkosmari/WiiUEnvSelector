@@ -21,4 +21,8 @@ configure
 libtool
 Makefile
 Makefile.in
+meta.xml
+meta.xml.tmp
 stamp-h1
+wiiu/
+WiiUEnvSelector.zip
