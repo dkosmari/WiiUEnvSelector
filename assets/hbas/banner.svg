@@ -28,7 +28,7 @@
      inkscape:document-units="px"
      showgrid="false"
      inkscape:zoom="0.84096521"
-     inkscape:cx="410.83745"
+     inkscape:cx="256.25317"
      inkscape:cy="203.33778"
      inkscape:window-width="1920"
      inkscape:window-height="1011"
@@ -75,7 +75,8 @@
      id="layer1">
     <g
        id="g4943"
-       transform="matrix(0.50637947,0,0,0.50637947,47.246788,3.2972614)">
+       transform="matrix(0.50637947,0,0,0.50637947,47.246788,3.2972614)"
+       style="opacity:0.51927642">
       <path
          style="fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:4;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1"
          d="M 23,63 V 33"
@@ -323,5 +324,16 @@
          cy="34.082809"
          r="0.027999559" />
     </g>
+    <text
+       xml:space="preserve"
+       style="font-size:28.2222px;line-height:125%;font-family:'Noto Color Emoji';-inkscape-font-specification:'Noto Color Emoji';letter-spacing:0px;word-spacing:0px;opacity:1;fill:#000000;fill-opacity:1;stroke:#adadad;stroke-width:1.05833;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1"
+       x="112.05632"
+       y="38.932549"
+       id="text5502"><tspan
+         sodipodi:role="line"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:28.2222px;font-family:Oswald;-inkscape-font-specification:'Oswald Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:#adadad;stroke-width:1.05833;stroke-dasharray:none;stroke-opacity:1"
+         x="112.05632"
+         y="38.932549"
+         id="tspan642">Wii U Env Selector</tspan></text>
   </g>
 </svg>
